@@ -1,13 +1,25 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../data/articles_repository.dart';
+import '../models/article/article.dart';
+
 part 'articles_event.dart';
 part 'articles_state.dart';
 
 class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
-  ArticlesBloc() : super(ArticlesInitial()) {
-    on<ArticlesEvent>((event, emit) {
-      // TODO: implement event handler
+  final ArticleRepository articleRepository;
+
+  ArticlesBloc(this.articleRepository) : super(ArticlesInitial()) {
+    on<GetArticles>((event, emit) async {
+      emit(ArticlesLoading());
+      final articles = await articleRepository.getArticles();
+      emit(ArticlesLoaded(articles));
     });
+    on<GetArticlByID>(
+      (event, emit) {
+        throw UnimplementedError();
+      },
+    );
   }
 }

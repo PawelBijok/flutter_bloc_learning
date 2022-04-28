@@ -1,6 +1,11 @@
-import 'package:bloc_learning/counter/counter_bloc.dart';
+import 'dart:convert';
+
+import 'package:bloc_learning/bloc/articles_bloc.dart';
+import 'package:bloc_learning/models/article/article.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'data/articles_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +22,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider(
-        create: (context) => CounterBloc(),
+        create: (context) =>
+            ArticlesBloc(ArticleRepository())..add(GetArticles()),
         child: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
@@ -40,40 +46,29 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: BlocListener<CounterBloc, int>(
-        listener: (context, count) {
-          if (count > 10) {
-            print('over 10');
-          }
-        },
-        child: BlocBuilder<CounterBloc, int>(
-          buildWhen: (previous, current) {
-            return current > previous;
-          },
-          builder: (context, count) {
-            return Center(
-              child: Text('$count'),
+      body: BlocBuilder<ArticlesBloc, ArticlesState>(
+        builder: (context, ArticlesState state) {
+          if (state is ArticlesInitial || state is ArticlesLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () =>
-                context.read<CounterBloc>().add(CounterDecrement()),
-            tooltip: 'Increment',
-            child: const Icon(Icons.remove),
-          ),
-          SizedBox(width: 10),
-          FloatingActionButton(
-            onPressed: () =>
-                context.read<CounterBloc>().add(CounterIncrement()),
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-          ),
-        ],
+          }
+          if (state is ArticlesLoaded) {
+            return ListView.builder(
+              itemCount: state.articles.length,
+              itemBuilder: (context, index) {
+                final Article article = state.articles[index];
+                return ListTile(
+                  title: Text(article.title),
+                );
+              },
+            );
+          }
+
+          return Center(
+            child: Text('We do not support "$state" state yes'),
+          );
+        },
       ),
     );
   }
