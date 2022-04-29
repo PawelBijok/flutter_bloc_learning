@@ -31,5 +31,25 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
         }
       },
     );
+    on<ArticleToggleFavorite>(
+      (event, emit) {
+        print('test');
+        final Article article = state.articles.firstWhere(
+          (article) => article.id == event.id,
+        );
+        final updatedArticle = article.copyWith(
+          isFavorite: !article.isFavorite,
+        );
+        List<Article> newArticles =
+            (state.articles as List<Article>).map((Article a) {
+          if (a.id == event.id) {
+            return updatedArticle;
+          }
+          return a;
+        }).toList();
+
+        emit(ArticlesLoaded(newArticles));
+      },
+    );
   }
 }

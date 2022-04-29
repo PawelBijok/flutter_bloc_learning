@@ -11,4 +11,10 @@ class GetArticleByID extends ArticlesEvent {
   GetArticleByID(this.id);
 }
 
+class ArticleToggleFavorite extends ArticlesEvent {
+  final int id;
+
+  ArticleToggleFavorite(this.id);
+}
+
 //TODO: Write an event to add new event 

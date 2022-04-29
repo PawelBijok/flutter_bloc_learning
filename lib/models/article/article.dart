@@ -11,10 +11,11 @@ part 'article.g.dart';
 @freezed
 class Article with _$Article {
   const factory Article({
-    required int id,
+    required final int id,
     required String title,
     required String content,
     required int views,
+    @Default(false) bool isFavorite,
   }) = _Article;
 
   factory Article.fromJson(Map<String, Object?> json) =>

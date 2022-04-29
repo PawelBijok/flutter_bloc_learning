@@ -24,6 +24,7 @@ mixin _$Article {
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   int get views => throw _privateConstructorUsedError;
+  bool get isFavorite => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,7 @@ mixin _$Article {
 abstract class $ArticleCopyWith<$Res> {
   factory $ArticleCopyWith(Article value, $Res Function(Article) then) =
       _$ArticleCopyWithImpl<$Res>;
-  $Res call({int id, String title, String content, int views});
+  $Res call({int id, String title, String content, int views, bool isFavorite});
 }
 
 /// @nodoc
@@ -51,6 +52,7 @@ class _$ArticleCopyWithImpl<$Res> implements $ArticleCopyWith<$Res> {
     Object? title = freezed,
     Object? content = freezed,
     Object? views = freezed,
+    Object? isFavorite = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -69,6 +71,10 @@ class _$ArticleCopyWithImpl<$Res> implements $ArticleCopyWith<$Res> {
           ? _value.views
           : views // ignore: cast_nullable_to_non_nullable
               as int,
+      isFavorite: isFavorite == freezed
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -78,7 +84,7 @@ abstract class _$ArticleCopyWith<$Res> implements $ArticleCopyWith<$Res> {
   factory _$ArticleCopyWith(_Article value, $Res Function(_Article) then) =
       __$ArticleCopyWithImpl<$Res>;
   @override
-  $Res call({int id, String title, String content, int views});
+  $Res call({int id, String title, String content, int views, bool isFavorite});
 }
 
 /// @nodoc
@@ -96,6 +102,7 @@ class __$ArticleCopyWithImpl<$Res> extends _$ArticleCopyWithImpl<$Res>
     Object? title = freezed,
     Object? content = freezed,
     Object? views = freezed,
+    Object? isFavorite = freezed,
   }) {
     return _then(_Article(
       id: id == freezed
@@ -114,6 +121,10 @@ class __$ArticleCopyWithImpl<$Res> extends _$ArticleCopyWithImpl<$Res>
           ? _value.views
           : views // ignore: cast_nullable_to_non_nullable
               as int,
+      isFavorite: isFavorite == freezed
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -125,7 +136,8 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
       {required this.id,
       required this.title,
       required this.content,
-      required this.views});
+      required this.views,
+      this.isFavorite = false});
 
   factory _$_Article.fromJson(Map<String, dynamic> json) =>
       _$$_ArticleFromJson(json);
@@ -138,10 +150,13 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
   final String content;
   @override
   final int views;
+  @override
+  @JsonKey()
+  final bool isFavorite;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Article(id: $id, title: $title, content: $content, views: $views)';
+    return 'Article(id: $id, title: $title, content: $content, views: $views, isFavorite: $isFavorite)';
   }
 
   @override
@@ -152,7 +167,8 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('content', content))
-      ..add(DiagnosticsProperty('views', views));
+      ..add(DiagnosticsProperty('views', views))
+      ..add(DiagnosticsProperty('isFavorite', isFavorite));
   }
 
   @override
@@ -163,7 +179,9 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality().equals(other.content, content) &&
-            const DeepCollectionEquality().equals(other.views, views));
+            const DeepCollectionEquality().equals(other.views, views) &&
+            const DeepCollectionEquality()
+                .equals(other.isFavorite, isFavorite));
   }
 
   @JsonKey(ignore: true)
@@ -173,7 +191,8 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(content),
-      const DeepCollectionEquality().hash(views));
+      const DeepCollectionEquality().hash(views),
+      const DeepCollectionEquality().hash(isFavorite));
 
   @JsonKey(ignore: true)
   @override
@@ -191,7 +210,8 @@ abstract class _Article implements Article {
       {required final int id,
       required final String title,
       required final String content,
-      required final int views}) = _$_Article;
+      required final int views,
+      final bool isFavorite}) = _$_Article;
 
   factory _Article.fromJson(Map<String, dynamic> json) = _$_Article.fromJson;
 
@@ -203,6 +223,8 @@ abstract class _Article implements Article {
   String get content => throw _privateConstructorUsedError;
   @override
   int get views => throw _privateConstructorUsedError;
+  @override
+  bool get isFavorite => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ArticleCopyWith<_Article> get copyWith =>

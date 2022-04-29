@@ -11,6 +11,7 @@ _$_Article _$$_ArticleFromJson(Map<String, dynamic> json) => _$_Article(
       title: json['title'] as String,
       content: json['content'] as String,
       views: json['views'] as int,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_ArticleToJson(_$_Article instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$$_ArticleToJson(_$_Article instance) =>
       'title': instance.title,
       'content': instance.content,
       'views': instance.views,
+      'isFavorite': instance.isFavorite,
     };

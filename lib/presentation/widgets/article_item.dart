@@ -1,5 +1,7 @@
 import 'package:beamer/beamer.dart';
+import 'package:bloc_learning/bloc/articles_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/article/article.dart';
 
@@ -18,8 +20,14 @@ class ArticleItem extends StatelessWidget {
             Beamer.of(context)
                 .beamToNamed('/articles/${article.id}', data: context);
           },
-          leading:
-              IconButton(icon: Icon(Icons.bookmark_outline), onPressed: () {}),
+          leading: IconButton(
+              icon: Icon(
+                  article.isFavorite ? Icons.bookmark : Icons.bookmark_outline),
+              onPressed: () {
+                context
+                    .read<ArticlesBloc>()
+                    .add(ArticleToggleFavorite(article.id));
+              }),
           title: Text(article.title),
           subtitle: Text(article.content),
           trailing: Row(
