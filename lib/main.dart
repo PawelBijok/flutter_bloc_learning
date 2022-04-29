@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bloc_learning/bloc/articles_bloc.dart';
+import 'package:bloc_learning/data/articles_provider.dart';
 import 'package:bloc_learning/models/article/article.dart';
+import 'package:bloc_learning/presentation/article/article_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beamer/beamer.dart';
 
 import 'data/articles_repository.dart';
 import 'presentation/home_screen.dart';
@@ -17,15 +21,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final routerDelegate = BeamerDelegate(
+      locationBuilder: RoutesLocationBuilder(
+        routes: {
+          // Return either Widgets or BeamPages if more customization is needed
+          '/': (context, state, data) => BlocProvider(
+                create: (context) =>
+                    ArticlesBloc(FakeArticleRepository())..add(GetArticles()),
+                child: const HomeScreen(),
+              ),
+          '/articles/:articleId': (context, state, ctx) {
+            // Take the path parameter of interest from BeamState
+            final articleId = state.pathParameters['articleId']!;
+
+            // Use BeamPage to define custom behavior
+            return BeamPage(
+              key: ValueKey('article-$articleId'),
+              title: 'An Article #$articleId',
+              popToNamed: '/',
+              type: Platform.isIOS
+                  ? BeamPageType.cupertino
+                  : BeamPageType.material,
+              child: BlocProvider.value(
+                value: BlocProvider.of<ArticlesBloc>(ctx as BuildContext),
+                child: ArticleScreen(
+                  id: int.parse(articleId),
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+    return MaterialApp.router(
+      routeInformationParser: BeamerParser(),
+      routerDelegate: routerDelegate,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) =>
-            ArticlesBloc(FakeArticleRepository())..add(GetArticles()),
-        child: const HomeScreen(),
       ),
     );
   }

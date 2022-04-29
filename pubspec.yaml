@@ -20,6 +20,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   freezed_annotation: ^2.0.1
   json_serializable: ^6.2.0
+  beamer: ^1.4.1+1
+  flutter_lorem: ^2.0.0
+  faker: ^2.0.0
 
 dev_dependencies:
   flutter_test:

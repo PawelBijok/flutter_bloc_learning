@@ -5,10 +5,10 @@ abstract class ArticlesEvent {}
 
 class GetArticles extends ArticlesEvent {}
 
-class GetArticlByID extends ArticlesEvent {
+class GetArticleByID extends ArticlesEvent {
   final int id;
 
-  GetArticlByID(this.id);
+  GetArticleByID(this.id);
 }
 
 //TODO: Write an event to add new event 

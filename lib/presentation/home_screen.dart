@@ -1,3 +1,5 @@
+import 'package:bloc_learning/core/widgets/error_message.dart';
+import 'package:bloc_learning/core/widgets/loading.dart';
 import 'package:bloc_learning/presentation/widgets/article_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,21 +15,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BLoC Articles'),
+        title: const Text('BLoC Articles'),
         actions: [
           IconButton(
               onPressed: () {
                 context.read<ArticlesBloc>().add(GetArticles());
               },
-              icon: Icon(Icons.refresh))
+              icon: const Icon(Icons.refresh))
         ],
       ),
       body: BlocBuilder<ArticlesBloc, ArticlesState>(
+        buildWhen: (previous, current) {
+          if (current is SingleArticleLoaded ||
+              current is SingleArticleLoading ||
+              current is SingleArticleError) {
+            return false;
+          }
+          return true;
+        },
         builder: (context, ArticlesState state) {
           if (state is ArticlesInitial || state is ArticlesLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loading();
           }
           if (state is ArticlesLoaded) {
             return ListView.builder(
@@ -39,16 +47,7 @@ class HomeScreen extends StatelessWidget {
             );
           }
           if (state is ArticlesError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  state.message,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
-            );
+            return ErrorMessage(state.message);
           }
 
           return Center(

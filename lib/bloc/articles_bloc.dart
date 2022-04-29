@@ -20,9 +20,15 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
         emit(ArticlesError(error.toString()));
       }
     });
-    on<GetArticlByID>(
-      (event, emit) {
-        throw UnimplementedError();
+    on<GetArticleByID>(
+      (event, emit) async {
+        emit(SingleArticleLoading());
+        try {
+          final article = await articleRepository.getArticleByID(event.id);
+          emit(SingleArticleLoaded(article));
+        } catch (error) {
+          emit(SingleArticleError(error.toString()));
+        }
       },
     );
   }

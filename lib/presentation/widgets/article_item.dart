@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/article/article.dart';
@@ -13,6 +14,12 @@ class ArticleItem extends StatelessWidget {
       child: Card(
         elevation: 3,
         child: ListTile(
+          onTap: () {
+            Beamer.of(context)
+                .beamToNamed('/articles/${article.id}', data: context);
+          },
+          leading:
+              IconButton(icon: Icon(Icons.bookmark_outline), onPressed: () {}),
           title: Text(article.title),
           subtitle: Text(article.content),
           trailing: Row(
