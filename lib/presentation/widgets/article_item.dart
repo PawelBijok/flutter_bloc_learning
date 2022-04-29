@@ -18,10 +18,10 @@ class ArticleItem extends StatelessWidget {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.visibility,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(article.views.toString()),

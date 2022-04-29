@@ -13,8 +13,12 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   ArticlesBloc(this.articleRepository) : super(ArticlesInitial()) {
     on<GetArticles>((event, emit) async {
       emit(ArticlesLoading());
-      final articles = await articleRepository.getArticles();
-      emit(ArticlesLoaded(articles));
+      try {
+        final articles = await articleRepository.getArticles();
+        emit(ArticlesLoaded(articles));
+      } catch (error) {
+        emit(ArticlesError(error.toString()));
+      }
     });
     on<GetArticlByID>(
       (event, emit) {

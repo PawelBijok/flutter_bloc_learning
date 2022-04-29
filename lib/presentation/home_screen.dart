@@ -14,6 +14,13 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('BLoC Articles'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.read<ArticlesBloc>().add(GetArticles());
+              },
+              icon: Icon(Icons.refresh))
+        ],
       ),
       body: BlocBuilder<ArticlesBloc, ArticlesState>(
         builder: (context, ArticlesState state) {
@@ -31,9 +38,21 @@ class HomeScreen extends StatelessWidget {
               },
             );
           }
+          if (state is ArticlesError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+            );
+          }
 
           return Center(
-            child: Text('We do not support "$state" state yes'),
+            child: Text('We do not support "$state" state yet'),
           );
         },
       ),

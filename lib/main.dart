@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) =>
-            ArticlesBloc(ArticleRepository())..add(GetArticles()),
+            ArticlesBloc(FakeArticleRepository())..add(GetArticles()),
         child: const HomeScreen(),
       ),
     );

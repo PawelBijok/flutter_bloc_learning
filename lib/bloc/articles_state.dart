@@ -18,3 +18,9 @@ class ArticlesLoaded extends ArticlesState {
 
   ArticlesLoaded(this.articles);
 }
+
+class ArticlesError extends ArticlesState {
+  final String message;
+
+  ArticlesError(this.message);
+}
