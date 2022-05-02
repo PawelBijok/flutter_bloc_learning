@@ -11,9 +11,6 @@ import 'package:mocktail/mocktail.dart';
 
 class MockArticleRepository extends Mock implements ArticleRepository {}
 
-class MockAticlesBloc extends MockBloc<ArticlesEvent, ArticlesState>
-    implements ArticlesBloc {}
-
 void main() {
   late MockArticleRepository mockArticleRepository;
   late ArticlesBloc articlesBloc;
@@ -32,6 +29,15 @@ void main() {
         content: 'Contetn 1',
         views: 1,
         isFavorite: false),
+  ];
+
+  List<Article> changedArticlesList = [
+    const Article(
+        id: 1,
+        title: 'Title 1',
+        content: 'Contetn 1',
+        views: 1,
+        isFavorite: true),
   ];
 
   group('ArticleBloc test', () {
@@ -63,6 +69,39 @@ void main() {
       expect: () =>
           [const ArticlesState.loading(), ArticlesState.error(errorMessage)],
     );
+    blocTest("""emits Loaded when toggleing existing article""",
+        build: () {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          return articlesBloc;
+        },
+        act: (ArticlesBloc bloc) {
+          bloc.add(const LoadArticles());
+          bloc.add(const ToggleFavouriteArticle(1));
+        },
+        skip: 1,
+        expect: () => [
+              ArticlesState.loaded(articlesList),
+              ArticlesState.loaded(changedArticlesList),
+            ]);
+
+    blocTest("""emits LoadedWithError when toggleing not existing article""",
+        build: () {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          return articlesBloc;
+        },
+        act: (ArticlesBloc bloc) {
+          bloc.add(const LoadArticles());
+          bloc.add(const ToggleFavouriteArticle(2));
+        },
+        skip: 1,
+        expect: () => [
+              ArticlesState.loaded(articlesList),
+              ArticlesState.loadedWithError(articlesList, 'Article not found'),
+            ]);
     blocTest("""emits LoadedWithError event 
     when LoadArticles is added
     with yet loaded articels and 

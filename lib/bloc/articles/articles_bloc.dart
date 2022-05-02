@@ -13,13 +13,11 @@ part 'articles_bloc.freezed.dart';
 
 class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   final ArticleRepository articleRepository;
-  final List<Article>? initialArticles;
 
-  ArticlesBloc(this.articleRepository, [this.initialArticles])
-      : super(_Initial()) {
+  ArticlesBloc(this.articleRepository) : super(_Initial()) {
     on<LoadArticles>(((event, emit) async {
       final List<Article> oldArticles = state.articles;
-      emit(ArticlesState.loading());
+      emit(const ArticlesState.loading());
       try {
         final articles = await articleRepository.getArticles();
         emit(ArticlesState.loaded(articles));
@@ -32,14 +30,15 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
       }
     }));
     on<ToggleFavouriteArticle>(((event, emit) {
-      final Article? article = state.articles.firstWhere(
+      final int articleIndex = state.articles.indexWhere(
         (article) => article.id == event.id,
       );
-      if (article == null) {
+      if (articleIndex == -1) {
         emit(
             ArticlesState.loadedWithError(state.articles, 'Article not found'));
         return;
       }
+      final article = state.articles[articleIndex];
       final updatedArticle = article.copyWith(
         isFavorite: !article.isFavorite,
       );
