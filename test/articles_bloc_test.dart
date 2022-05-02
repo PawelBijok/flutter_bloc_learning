@@ -1,4 +1,4 @@
-import 'package:bloc_learning/bloc/articles_bloc.dart';
+import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
 import 'package:bloc_learning/data/articles_provider.dart';
 import 'package:bloc_learning/data/articles_repository.dart';
 import 'package:bloc_learning/models/article/article.dart';
@@ -23,7 +23,7 @@ void main() {
   });
 
   List<Article> articlesList = [
-    Article(
+    const Article(
         id: 1,
         title: 'Title 1',
         content: 'Contetn 1',
@@ -42,8 +42,9 @@ void main() {
         );
         return articlesBloc;
       },
-      act: (ArticlesBloc bloc) => bloc.add(GetArticles()),
-      expect: () => [ArticlesLoading(), ArticlesLoaded(articlesList)],
+      act: (ArticlesBloc bloc) => bloc.add(LoadArticles()),
+      expect: () =>
+          [ArticlesState.loading(), ArticlesState.loaded(articlesList)],
     );
 
     blocTest(
@@ -55,8 +56,9 @@ void main() {
         );
         return articlesBloc;
       },
-      act: (ArticlesBloc bloc) => bloc.add(GetArticles()),
-      expect: () => [ArticlesLoading(), ArticlesError(errorMessage)],
+      act: (ArticlesBloc bloc) => bloc.add(LoadArticles()),
+      expect: () =>
+          [ArticlesState.loading(), ArticlesState.error(errorMessage)],
     );
   });
 

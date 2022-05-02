@@ -1,6 +1,5 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'article.dart';
@@ -12,11 +11,38 @@ part of 'article.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Article _$ArticleFromJson(Map<String, dynamic> json) {
   return _Article.fromJson(json);
 }
+
+/// @nodoc
+class _$ArticleTearOff {
+  const _$ArticleTearOff();
+
+  _Article call(
+      {required int id,
+      required String title,
+      required String content,
+      required int views,
+      bool isFavorite = false}) {
+    return _Article(
+      id: id,
+      title: title,
+      content: content,
+      views: views,
+      isFavorite: isFavorite,
+    );
+  }
+
+  Article fromJson(Map<String, Object?> json) {
+    return Article.fromJson(json);
+  }
+}
+
+/// @nodoc
+const $Article = _$ArticleTearOff();
 
 /// @nodoc
 mixin _$Article {
@@ -150,8 +176,8 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
   final String content;
   @override
   final int views;
-  @override
   @JsonKey()
+  @override
   final bool isFavorite;
 
   @override
@@ -184,7 +210,6 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
                 .equals(other.isFavorite, isFavorite));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -207,24 +232,24 @@ class _$_Article with DiagnosticableTreeMixin implements _Article {
 
 abstract class _Article implements Article {
   const factory _Article(
-      {required final int id,
-      required final String title,
-      required final String content,
-      required final int views,
-      final bool isFavorite}) = _$_Article;
+      {required int id,
+      required String title,
+      required String content,
+      required int views,
+      bool isFavorite}) = _$_Article;
 
   factory _Article.fromJson(Map<String, dynamic> json) = _$_Article.fromJson;
 
   @override
-  int get id => throw _privateConstructorUsedError;
+  int get id;
   @override
-  String get title => throw _privateConstructorUsedError;
+  String get title;
   @override
-  String get content => throw _privateConstructorUsedError;
+  String get content;
   @override
-  int get views => throw _privateConstructorUsedError;
+  int get views;
   @override
-  bool get isFavorite => throw _privateConstructorUsedError;
+  bool get isFavorite;
   @override
   @JsonKey(ignore: true)
   _$ArticleCopyWith<_Article> get copyWith =>
