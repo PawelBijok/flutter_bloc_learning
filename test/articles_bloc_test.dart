@@ -11,6 +11,9 @@ import 'package:mocktail/mocktail.dart';
 
 class MockArticleRepository extends Mock implements ArticleRepository {}
 
+class MockAticlesBloc extends MockBloc<ArticlesEvent, ArticlesState>
+    implements ArticlesBloc {}
+
 void main() {
   late MockArticleRepository mockArticleRepository;
   late ArticlesBloc articlesBloc;
@@ -44,7 +47,7 @@ void main() {
       },
       act: (ArticlesBloc bloc) => bloc.add(LoadArticles()),
       expect: () =>
-          [ArticlesState.loading(), ArticlesState.loaded(articlesList)],
+          [const ArticlesState.loading(), ArticlesState.loaded(articlesList)],
     );
 
     blocTest(
@@ -56,10 +59,33 @@ void main() {
         );
         return articlesBloc;
       },
-      act: (ArticlesBloc bloc) => bloc.add(LoadArticles()),
+      act: (ArticlesBloc bloc) => bloc.add(const LoadArticles()),
       expect: () =>
-          [ArticlesState.loading(), ArticlesState.error(errorMessage)],
+          [const ArticlesState.loading(), ArticlesState.error(errorMessage)],
     );
+    blocTest("""emits LoadedWithError event 
+    when LoadArticles is added
+    with yet loaded articels and 
+    repository throws error""",
+        build: () => articlesBloc,
+        act: (ArticlesBloc bloc) async {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          bloc.add(const LoadArticles());
+          await Future.delayed(const Duration(milliseconds: 1)).then((_) {
+            when(() => mockArticleRepository.getArticles())
+                .thenThrow(NetworkException(errorMessage));
+          });
+          await Future.delayed(const Duration(milliseconds: 1)).then((_) {
+            bloc.add(const LoadArticles());
+          });
+        },
+        skip: 2,
+        expect: () => [
+              const ArticlesState.loading(),
+              ArticlesState.loadedWithError(articlesList, errorMessage)
+            ]);
   });
 
   // blocTest('fetches articles', build: build)

@@ -13,8 +13,10 @@ part 'articles_bloc.freezed.dart';
 
 class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   final ArticleRepository articleRepository;
+  final List<Article>? initialArticles;
 
-  ArticlesBloc(this.articleRepository) : super(_Initial()) {
+  ArticlesBloc(this.articleRepository, [this.initialArticles])
+      : super(_Initial()) {
     on<LoadArticles>(((event, emit) async {
       final List<Article> oldArticles = state.articles;
       emit(ArticlesState.loading());
