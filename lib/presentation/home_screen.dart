@@ -1,6 +1,7 @@
 import 'package:bloc_learning/core/widgets/error_message.dart';
 import 'package:bloc_learning/core/widgets/loading.dart';
 import 'package:bloc_learning/presentation/widgets/article_item.dart';
+import 'package:bloc_learning/presentation/widgets/articles_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,20 +25,25 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.refresh))
         ],
       ),
-      body: BlocBuilder<ArticlesBloc, ArticlesState>(
+      body: BlocConsumer<ArticlesBloc, ArticlesState>(
+        listener: (context, state) {
+          state.when(
+              initial: () {},
+              loading: () {},
+              loaded: (articles) {},
+              loadedWithError: (_, message) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(message)));
+              },
+              error: (_) {});
+        },
         builder: (context, ArticlesState state) {
           return state.when(
-              initial: (() => Loading()),
-              loading: () => Loading(),
-              loaded: (articles) {
-                return ListView.builder(
-                  itemCount: articles.length,
-                  itemBuilder: (context, index) {
-                    final Article article = articles[index];
-                    return ArticleItem(article);
-                  },
-                );
-              },
+              initial: (() => const Loading()),
+              loading: () => const Loading(),
+              loaded: (articles) => ArticelsList(articles: articles),
+              loadedWithError: (articles, _) =>
+                  ArticelsList(articles: articles),
               error: (error) => ErrorMessage(error));
         },
       ),
