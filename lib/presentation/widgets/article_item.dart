@@ -1,8 +1,8 @@
 import 'package:beamer/beamer.dart';
-import 'package:bloc_learning/bloc/articles_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/articles/articles_bloc.dart';
 import '../../models/article/article.dart';
 
 class ArticleItem extends StatelessWidget {
@@ -26,7 +26,7 @@ class ArticleItem extends StatelessWidget {
               onPressed: () {
                 context
                     .read<ArticlesBloc>()
-                    .add(ArticleToggleFavorite(article.id));
+                    .add(ToggleFavouriteArticle(article.id));
               }),
           title: Text(article.title),
           subtitle: Text(article.content),

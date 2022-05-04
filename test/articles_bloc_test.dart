@@ -1,4 +1,4 @@
-import 'package:bloc_learning/bloc/articles_bloc.dart';
+import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
 import 'package:bloc_learning/data/articles_provider.dart';
 import 'package:bloc_learning/data/articles_repository.dart';
 import 'package:bloc_learning/models/article/article.dart';
@@ -23,12 +23,21 @@ void main() {
   });
 
   List<Article> articlesList = [
-    Article(
+    const Article(
         id: 1,
         title: 'Title 1',
         content: 'Contetn 1',
         views: 1,
         isFavorite: false),
+  ];
+
+  List<Article> changedArticlesList = [
+    const Article(
+        id: 1,
+        title: 'Title 1',
+        content: 'Contetn 1',
+        views: 1,
+        isFavorite: true),
   ];
 
   group('ArticleBloc test', () {
@@ -42,8 +51,9 @@ void main() {
         );
         return articlesBloc;
       },
-      act: (ArticlesBloc bloc) => bloc.add(GetArticles()),
-      expect: () => [ArticlesLoading(), ArticlesLoaded(articlesList)],
+      act: (ArticlesBloc bloc) => bloc.add(LoadArticles()),
+      expect: () =>
+          [const ArticlesState.loading(), ArticlesState.loaded(articlesList)],
     );
 
     blocTest(
@@ -55,9 +65,66 @@ void main() {
         );
         return articlesBloc;
       },
-      act: (ArticlesBloc bloc) => bloc.add(GetArticles()),
-      expect: () => [ArticlesLoading(), ArticlesError(errorMessage)],
+      act: (ArticlesBloc bloc) => bloc.add(const LoadArticles()),
+      expect: () =>
+          [const ArticlesState.loading(), ArticlesState.error(errorMessage)],
     );
+    blocTest("""emits Loaded when toggleing existing article""",
+        build: () {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          return articlesBloc;
+        },
+        act: (ArticlesBloc bloc) {
+          bloc.add(const LoadArticles());
+          bloc.add(const ToggleFavouriteArticle(1));
+        },
+        skip: 1,
+        expect: () => [
+              ArticlesState.loaded(articlesList),
+              ArticlesState.loaded(changedArticlesList),
+            ]);
+
+    blocTest("""emits LoadedWithError when toggleing not existing article""",
+        build: () {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          return articlesBloc;
+        },
+        act: (ArticlesBloc bloc) {
+          bloc.add(const LoadArticles());
+          bloc.add(const ToggleFavouriteArticle(2));
+        },
+        skip: 1,
+        expect: () => [
+              ArticlesState.loaded(articlesList),
+              ArticlesState.loadedWithError(articlesList, 'Article not found'),
+            ]);
+    blocTest("""emits LoadedWithError event 
+    when LoadArticles is added
+    with yet loaded articels and 
+    repository throws error""",
+        build: () => articlesBloc,
+        act: (ArticlesBloc bloc) async {
+          when(() => mockArticleRepository.getArticles()).thenAnswer(
+            (_) async => articlesList,
+          );
+          bloc.add(const LoadArticles());
+          await Future.delayed(const Duration(milliseconds: 1)).then((_) {
+            when(() => mockArticleRepository.getArticles())
+                .thenThrow(NetworkException(errorMessage));
+          });
+          await Future.delayed(const Duration(milliseconds: 1)).then((_) {
+            bloc.add(const LoadArticles());
+          });
+        },
+        skip: 2,
+        expect: () => [
+              const ArticlesState.loading(),
+              ArticlesState.loadedWithError(articlesList, errorMessage)
+            ]);
   });
 
   // blocTest('fetches articles', build: build)

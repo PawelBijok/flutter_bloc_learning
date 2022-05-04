@@ -16,10 +16,6 @@ dependencies:
   flutter_bloc: ^8.0.1 
   bloc_test: ^9.0.3
   equatable: ^2.0.3
-  
-
-
-
   cupertino_icons: ^1.0.2
   freezed_annotation: ^1.0.1
   json_serializable: ^6.2.0
