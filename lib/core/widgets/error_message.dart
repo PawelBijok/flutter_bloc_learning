@@ -11,6 +11,7 @@ class ErrorMessage extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Text(
           message,
+          key: const Key('test__error-message'),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineSmall,
         ),

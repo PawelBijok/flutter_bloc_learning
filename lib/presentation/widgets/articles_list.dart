@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../models/article/article.dart';
 import 'article_item.dart';
 
-class ArticelsList extends StatelessWidget {
+class ArticlesList extends StatelessWidget {
   final List<Article> articles;
-  const ArticelsList({Key? key, required this.articles}) : super(key: key);
+  const ArticlesList({Key? key, required this.articles}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

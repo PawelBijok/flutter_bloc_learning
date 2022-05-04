@@ -20,7 +20,7 @@ class ArticleProvider {
   }
 
   Future<String> getArticles() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 1000));
     if (throwError()) {
       throw NetworkException(
           'Something went wrong 🤯 Try again you have 90% chance to succeed 🙃');

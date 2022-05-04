@@ -12,13 +12,13 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BLoC Articles'),
         actions: [
           IconButton(
+              key: Key('test__refresh-button'),
               onPressed: () {
                 context.read<ArticlesBloc>().add(LoadArticles());
               },
@@ -41,9 +41,9 @@ class HomeScreen extends StatelessWidget {
           return state.when(
               initial: (() => const Loading()),
               loading: () => const Loading(),
-              loaded: (articles) => ArticelsList(articles: articles),
+              loaded: (articles) => ArticlesList(articles: articles),
               loadedWithError: (articles, _) =>
-                  ArticelsList(articles: articles),
+                  ArticlesList(articles: articles),
               error: (error) => ErrorMessage(error));
         },
       ),
