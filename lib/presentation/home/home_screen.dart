@@ -1,12 +1,10 @@
 import 'package:bloc_learning/core/widgets/error_message.dart';
 import 'package:bloc_learning/core/widgets/loading.dart';
-import 'package:bloc_learning/presentation/widgets/article_item.dart';
-import 'package:bloc_learning/presentation/widgets/articles_list.dart';
+import 'package:bloc_learning/presentation/home/widgets/articles_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/articles/articles_bloc.dart';
-import '../models/article/article.dart';
+import '../../bloc/articles/articles_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,9 +16,9 @@ class HomeScreen extends StatelessWidget {
         title: const Text('BLoC Articles'),
         actions: [
           IconButton(
-              key: Key('test__refresh-button'),
+              key: const Key('test__refresh-button'),
               onPressed: () {
-                context.read<ArticlesBloc>().add(LoadArticles());
+                context.read<ArticlesBloc>().add(const LoadArticles());
               },
               icon: const Icon(Icons.refresh))
         ],

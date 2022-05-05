@@ -2,8 +2,8 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/articles/articles_bloc.dart';
-import '../../models/article/article.dart';
+import '../../../bloc/articles/articles_bloc.dart';
+import '../../../models/article/article.dart';
 
 class ArticleItem extends StatelessWidget {
   final Article article;
@@ -21,6 +21,7 @@ class ArticleItem extends StatelessWidget {
                 .beamToNamed('/articles/${article.id}', data: context);
           },
           leading: IconButton(
+              key: Key('test__favorite-button'),
               icon: Icon(
                   article.isFavorite ? Icons.bookmark : Icons.bookmark_outline),
               onPressed: () {
@@ -30,18 +31,20 @@ class ArticleItem extends StatelessWidget {
               }),
           title: Text(article.title),
           subtitle: Text(article.content),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.visibility,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(article.views.toString()),
-            ],
-          ),
+          trailing: article.views > 0
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.visibility,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(article.views.toString()),
+                  ],
+                )
+              : null,
         ),
       ),
     );

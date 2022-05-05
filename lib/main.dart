@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beamer/beamer.dart';
 
 import 'data/articles_repository.dart';
-import 'presentation/home_screen.dart';
+import 'presentation/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

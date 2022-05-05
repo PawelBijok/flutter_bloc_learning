@@ -3,7 +3,7 @@ import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
 import 'package:bloc_learning/data/articles_provider.dart';
 import 'package:bloc_learning/data/articles_repository.dart';
 import 'package:bloc_learning/models/article/article.dart';
-import 'package:bloc_learning/presentation/home_screen.dart';
+import 'package:bloc_learning/presentation/home/home_screen.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +14,6 @@ class MockFakeArticleRepository extends Mock implements FakeArticleRepository {}
 
 void main() {
   late MockFakeArticleRepository mockRepo;
-  late ArticleBloc articleBloc;
 
   const List<Article> articleList = <Article>[
     Article(id: 1, title: 't1', content: 'c1', views: 1)
@@ -22,7 +21,6 @@ void main() {
 
   setUp(() {
     mockRepo = MockFakeArticleRepository();
-    articleBloc = ArticleBloc(mockRepo);
   });
 
   void arangeArticlesInstantyly() {
@@ -105,6 +103,20 @@ void main() {
         expect(find.byKey(const Key('test__loading-indicator')), findsNothing);
         expect(find.byKey(const Key('test__error-message')), findsOneWidget);
         expect(find.text(errorMessage), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "should reload articles when refresh button is pressed",
+      (WidgetTester tester) async {
+        arangeArticlesInstantyly();
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.pump();
+        await tester.tap(find.byKey(const Key('test__refresh-button')));
+        await tester.pump();
+        for (Article articel in articleList) {
+          expect(find.text(articel.title), findsOneWidget);
+        }
       },
     );
     testWidgets(

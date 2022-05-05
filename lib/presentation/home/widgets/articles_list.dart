@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/article/article.dart';
+import '../../../models/article/article.dart';
 import 'article_item.dart';
 
 class ArticlesList extends StatelessWidget {
