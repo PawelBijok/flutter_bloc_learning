@@ -10,7 +10,9 @@ abstract class ArticleRepository {
 }
 
 class FakeArticleRepository implements ArticleRepository {
-  final ArticleProvider articleProvider = ArticleProvider();
+  final ArticleProvider articleProvider;
+
+  FakeArticleRepository(this.articleProvider);
 
   @override
   Future<List<Article>> getArticles() async {

@@ -1,14 +1,15 @@
 import 'dart:io';
 
+import 'package:bloc_learning/bloc/article/article_bloc.dart';
+import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
+import 'package:bloc_learning/data/articles_provider.dart';
 import 'package:bloc_learning/presentation/article/article_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beamer/beamer.dart';
 
-import 'bloc/article/article_bloc.dart';
-import 'bloc/articles/articles_bloc.dart';
 import 'data/articles_repository.dart';
-import 'presentation/home_screen.dart';
+import 'presentation/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
           // Return either Widgets or BeamPages if more customization is needed
           '/': (context, state, data) => BlocProvider(
                 create: (context) =>
-                    ArticlesBloc(FakeArticleRepository())..add(LoadArticles()),
+                    ArticlesBloc(FakeArticleRepository(ArticleProvider()))
+                      ..add(const LoadArticles()),
                 child: const HomeScreen(),
               ),
           '/articles/:articleId': (context, state, ctx) {
@@ -41,7 +43,8 @@ class MyApp extends StatelessWidget {
                   ? BeamPageType.cupertino
                   : BeamPageType.material,
               child: BlocProvider(
-                create: (context) => ArticleBloc(FakeArticleRepository()),
+                create: (context) =>
+                    ArticleBloc(FakeArticleRepository(ArticleProvider())),
                 child: ArticleScreen(
                   id: int.parse(articleId),
                 ),
