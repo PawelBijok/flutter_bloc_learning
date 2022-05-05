@@ -34,25 +34,21 @@ void main() {
   }
 
   Widget createTestWidgetWithBlocProvider() {
-    return MaterialApp(
-      home: Scaffold(
-        body: BlocProvider(
-          create: (ctx) => ArticlesBloc(mockRepo)..add(const LoadArticles()),
-          child: BlocBuilder<ArticlesBloc, ArticlesState>(
-            builder: (context, state) {
-              Article? article;
-              state.when(
-                  initial: () {},
-                  loading: () {},
-                  loaded: (articles) {
-                    article = articles.first;
-                  },
-                  loadedWithError: (_, __) {},
-                  error: (_) {});
-              return article != null ? ArticleItem(article!) : Container();
-            },
-          ),
-        ),
+    return BlocProvider(
+      create: (ctx) => ArticlesBloc(mockRepo)..add(const LoadArticles()),
+      child: BlocBuilder<ArticlesBloc, ArticlesState>(
+        builder: (context, state) {
+          Article? article;
+          state.when(
+              initial: () {},
+              loading: () {},
+              loaded: (articles) {
+                article = articles.first;
+              },
+              loadedWithError: (_, __) {},
+              error: (_) {});
+          return createTestWidgetWithData(article: article);
+        },
       ),
     );
   }

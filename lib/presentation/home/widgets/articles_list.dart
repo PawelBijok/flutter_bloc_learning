@@ -9,12 +9,15 @@ class ArticlesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
       itemCount: articles.length,
       itemBuilder: (context, index) {
         final Article article = articles[index];
         return ArticleItem(article);
       },
+      separatorBuilder: (context, index) => const Divider(
+        thickness: 1,
+      ),
     );
   }
 }
