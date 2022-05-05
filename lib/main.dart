@@ -7,6 +7,7 @@ import 'package:bloc_learning/presentation/article/article_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beamer/beamer.dart';
+import 'package:go_router/go_router.dart';
 
 import 'data/articles_repository.dart';
 import 'presentation/home/home_screen.dart';
@@ -20,43 +21,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final routerDelegate = BeamerDelegate(
-      locationBuilder: RoutesLocationBuilder(
-        routes: {
-          // Return either Widgets or BeamPages if more customization is needed
-          '/': (context, state, data) => BlocProvider(
-                create: (context) =>
-                    ArticlesBloc(FakeArticleRepository(ArticleProvider()))
-                      ..add(const LoadArticles()),
-                child: const HomeScreen(),
-              ),
-          '/articles/:articleId': (context, state, ctx) {
-            // Take the path parameter of interest from BeamState
-            final articleId = state.pathParameters['articleId']!;
-
-            // Use BeamPage to define custom behavior
-            return BeamPage(
-              key: ValueKey('article-$articleId'),
-              title: 'An Article #$articleId',
-              popToNamed: '/',
-              type: Platform.isIOS
-                  ? BeamPageType.cupertino
-                  : BeamPageType.material,
-              child: BlocProvider(
-                create: (context) =>
-                    ArticleBloc(FakeArticleRepository(ArticleProvider())),
-                child: ArticleScreen(
-                  id: int.parse(articleId),
-                ),
-              ),
-            );
-          }
-        },
-      ),
+    final GoRouter _router = GoRouter(
+      routes: <GoRoute>[
+        GoRoute(
+          path: '/',
+          builder: (BuildContext context, GoRouterState state) => BlocProvider(
+            create: (context) =>
+                ArticlesBloc(FakeArticleRepository(ArticleProvider()))
+                  ..add(const LoadArticles()),
+            child: const HomeScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/articles/:articleId',
+          builder: (BuildContext context, GoRouterState state) => BlocProvider(
+            create: (context) =>
+                ArticleBloc(FakeArticleRepository(ArticleProvider())),
+            child: ArticleScreen(
+              id: int.parse(state.params['articleId']!),
+            ),
+          ),
+        ),
+      ],
     );
     return MaterialApp.router(
-      routeInformationParser: BeamerParser(),
-      routerDelegate: routerDelegate,
+      routeInformationParser: _router.routeInformationParser,
+      routerDelegate: _router.routerDelegate,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
