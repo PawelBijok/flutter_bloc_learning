@@ -1,14 +1,12 @@
-import 'package:beamer/beamer.dart';
+import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
+import 'package:bloc_learning/models/article/article.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../bloc/articles/articles_bloc.dart';
-import '../../../models/article/article.dart';
-
 class ArticleItem extends StatelessWidget {
-  final Article article;
   const ArticleItem(this.article, {Key? key}) : super(key: key);
+  final Article article;
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +15,14 @@ class ArticleItem extends StatelessWidget {
         context.push('/articles/${article.id}');
       },
       leading: IconButton(
-          key: Key('test__favorite-button'),
-          icon: Icon(
-              article.isFavorite ? Icons.bookmark : Icons.bookmark_outline),
-          onPressed: () {
-            context
-                .read<ArticlesBloc>()
-                .add(ToggleFavouriteArticle(article.id));
-          }),
+        key: const Key('test__favorite-button'),
+        icon: Icon(
+          article.isFavorite ? Icons.bookmark : Icons.bookmark_outline,
+        ),
+        onPressed: () {
+          context.read<ArticlesBloc>().add(ToggleFavouriteArticle(article.id));
+        },
+      ),
       title: Text(article.title),
       subtitle: Text(article.content),
       trailing: article.views > 0
