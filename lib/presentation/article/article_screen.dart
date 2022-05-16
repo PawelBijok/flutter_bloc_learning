@@ -1,13 +1,14 @@
-import 'package:bloc_learning/core/widgets/loading.dart';
+import 'package:bloc_learning/bloc/article/article_bloc.dart';
+import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
+import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/article/article_bloc.dart';
-import '../../core/widgets/error_message.dart';
-
 class ArticleScreen extends StatefulWidget {
+  const ArticleScreen({required this.id, Key? key}) : super(key: key);
   final int id;
-  const ArticleScreen({Key? key, required this.id}) : super(key: key);
+
+  static const routeName = '/articles/:articleId';
 
   @override
   State<ArticleScreen> createState() => _ArticleScreenState();
@@ -28,30 +29,27 @@ class _ArticleScreenState extends State<ArticleScreen> {
       ),
       body: BlocBuilder<ArticleBloc, ArticleState>(builder: (context, state) {
         return state.when(
-            initial: () {
-              return Loading();
-            },
-            loading: () {
-              return Loading();
-            },
-            loaded: (article) {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Text(
-                      article.title,
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    Text(
-                      article.content,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-              );
-            },
-            error: (message) => ErrorMessage(message));
+          initial: LoadingIndicator.new,
+          loading: LoadingIndicator.new,
+          loaded: (article) {
+            return Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    article.title,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Text(
+                    article.content,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            );
+          },
+          error: ErrorMessage.new,
+        );
       }),
     );
   }

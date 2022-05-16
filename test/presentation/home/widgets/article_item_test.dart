@@ -1,14 +1,11 @@
+import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
+import 'package:bloc_learning/data/articles_repository.dart';
+import 'package:bloc_learning/models/article/article.dart';
+import 'package:bloc_learning/presentation/home/widgets/article_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import 'package:bloc_learning/models/article/article.dart';
-
-import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
-import 'package:bloc_learning/data/articles_repository.dart';
-
-import 'package:bloc_learning/presentation/home/widgets/article_item.dart';
 
 class MockFakeArticleRepository extends Mock implements FakeArticleRepository {}
 
@@ -26,9 +23,15 @@ void main() {
   Widget createTestWidgetWithData({Article? article}) {
     return MaterialApp(
       home: Scaffold(
-        body: ArticleItem(article ??
-            const Article(
-                id: 1, title: 'test', content: 'test_content', views: 1)),
+        body: ArticleItem(
+          article ??
+              const Article(
+                id: 1,
+                title: 'test',
+                content: 'test_content',
+                views: 1,
+              ),
+        ),
       ),
     );
   }
@@ -39,23 +42,23 @@ void main() {
       child: BlocBuilder<ArticlesBloc, ArticlesState>(
         builder: (context, state) {
           Article? article;
-          state.when(
-              initial: () {},
-              loading: () {},
-              loaded: (articles) {
-                article = articles.first;
-              },
-              loadedWithError: (_, __) {},
-              error: (_) {});
+          state.maybeWhen(
+            loaded: (articles) {
+              article = articles.first;
+            },
+            // ignore: no-empty-block
+            orElse: () {},
+          );
+
           return createTestWidgetWithData(article: article);
         },
       ),
     );
   }
 
-  group('views counter tests', () {
+  group('Views counter', () {
     testWidgets(
-      "views icon and views counter is shown when views count is greater than 0",
+      'views icon and views counter is shown when views count is greater than 0',
       (WidgetTester tester) async {
         const Article fakeArticle =
             Article(id: 1, title: 't1', content: 'c1', views: 12);
@@ -66,7 +69,7 @@ void main() {
     );
 
     testWidgets(
-      "views icon and views counter is not shown when views count is 0",
+      'views icon and views counter is not shown when views count is 0',
       (WidgetTester tester) async {
         const Article fakeArticle =
             Article(id: 1, title: 't1', content: 'c1', views: 0);
@@ -79,28 +82,38 @@ void main() {
     );
   });
 
-  group('favourite icon tests', () {
+  group('Favourite icon', () {
     testWidgets(
-      "favourite icon is outlined when article is not favourite",
+      'favourite icon is outlined when article is not favourite',
       (WidgetTester tester) async {
         const fakeArticle = Article(
-            id: 0, title: 't1', content: 'c1', views: 1, isFavorite: false);
+          id: 0,
+          title: 't1',
+          content: 'c1',
+          views: 1,
+          isFavorite: false,
+        );
         await tester.pumpWidget(createTestWidgetWithData(article: fakeArticle));
         expect(find.byIcon(Icons.bookmark_outline), findsOneWidget);
       },
     );
     testWidgets(
-      "favourite icon is filled when article is favourite",
+      'favourite icon is filled when article is favourite',
       (WidgetTester tester) async {
         const fakeArticle = Article(
-            id: 0, title: 't1', content: 'c1', views: 1, isFavorite: true);
+          id: 0,
+          title: 't1',
+          content: 'c1',
+          views: 1,
+          isFavorite: true,
+        );
         await tester.pumpWidget(createTestWidgetWithData(article: fakeArticle));
         expect(find.byIcon(Icons.bookmark), findsOneWidget);
       },
     );
 
     testWidgets(
-      "taping favourite icon toggles favourite status",
+      'taping favourite icon toggles favourite status',
       (WidgetTester tester) async {
         when(() => mockRepo.getArticles()).thenAnswer(
           (_) async {
