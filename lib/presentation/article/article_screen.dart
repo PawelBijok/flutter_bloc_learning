@@ -1,4 +1,5 @@
 import 'package:bloc_learning/bloc/article/article_bloc.dart';
+import 'package:bloc_learning/extensions/extensions.dart';
 import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
 import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +39,11 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 children: [
                   Text(
                     article.title,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: context.theme.textTheme.headline5,
                   ),
                   Text(
                     article.content,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: context.theme.textTheme.bodyMedium,
                   ),
                 ],
               ),

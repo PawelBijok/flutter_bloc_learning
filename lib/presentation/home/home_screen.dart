@@ -3,6 +3,7 @@ import 'package:bloc_learning/extensions/extensions.dart';
 import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
 import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
 import 'package:bloc_learning/presentation/home/widgets/articles_list.dart';
+import 'package:bloc_learning/presentation/home/widgets/drawer/home_drawer.dart';
 import 'package:bloc_learning/presentation/home/widgets/refresh_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ class HomeScreen extends StatelessWidget {
           RefreshButton(),
         ],
       ),
+      drawer: const HomeDrawer(),
       body: const _Body(),
     );
   }
@@ -35,8 +37,7 @@ class _Body extends StatelessWidget {
       listener: (context, state) {
         state.maybeWhen(
           loadedWithError: (_, message) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(message)));
+            context.messenger.showSnackBar(SnackBar(content: Text(message)));
           },
           orElse: () {},
         );
