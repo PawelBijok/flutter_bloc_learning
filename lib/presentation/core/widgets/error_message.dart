@@ -1,3 +1,4 @@
+import 'package:bloc_learning/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ErrorMessage extends StatelessWidget {
@@ -12,7 +13,7 @@ class ErrorMessage extends StatelessWidget {
         child: Text(
           message,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: context.theme.textTheme.headlineSmall,
         ),
       ),
     );
