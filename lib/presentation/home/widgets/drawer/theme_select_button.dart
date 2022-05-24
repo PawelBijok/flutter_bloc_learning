@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThemeSelectButton extends StatelessWidget {
-  const ThemeSelectButton(
-      {required this.themeMode, required this.isActive, Key? key})
-      : super(key: key);
+  const ThemeSelectButton({
+    required this.themeMode,
+    required this.isActive,
+    Key? key,
+  }) : super(key: key);
   final ThemeMode themeMode;
   final bool isActive;
 
@@ -16,9 +18,7 @@ class ThemeSelectButton extends StatelessWidget {
       child: GestureDetector(
         onTap: () => context.read<ThemeCubit>().setTheme(themeMode),
         child: Container(
-          color: isActive
-              ? context.theme.colorScheme.primary
-              : context.theme.colorScheme.primaryContainer,
+          color: isActive ? context.theme.colorScheme.primary : context.theme.colorScheme.primaryContainer,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(
@@ -27,9 +27,7 @@ class ThemeSelectButton extends StatelessWidget {
               Text(
                 themeMode.l10n(context).toLowerCase(),
                 style: context.theme.textTheme.titleSmall!.copyWith(
-                  color: isActive
-                      ? context.theme.colorScheme.onPrimary
-                      : context.theme.colorScheme.onPrimaryContainer,
+                  color: isActive ? context.theme.colorScheme.onPrimary : context.theme.colorScheme.onPrimaryContainer,
                 ),
               ),
             ],

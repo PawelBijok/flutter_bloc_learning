@@ -8,23 +8,26 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.settings,
-              style: context.theme.textTheme.headlineMedium,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const ThemeSelector(),
-          ],
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.settings,
+                style: context.theme.textTheme.headlineMedium,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const ThemeSelector(),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

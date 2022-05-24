@@ -1,8 +1,14 @@
 {
-    "appTitle": "BLoC Articles",
+    "appTitle": "Spotter New Releases",
     "settings": "Settings",
     "selectThemeMode": "Select theme mode",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "error400": "Unable to authenticate this appliation",
+    "error401": "Invalid access token",
+    "error404": "Not found",
+    "errorUnknown": "Unknown error",
+    "unknownArtist": "Unknown artist"
+
 }

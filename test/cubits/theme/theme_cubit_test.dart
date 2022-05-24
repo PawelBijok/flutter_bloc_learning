@@ -51,22 +51,26 @@ void main() {
       },
     );
 
-    blocTest<ThemeCubit, ThemeMode>('initialize with saved theme', build: () {
-      when(
-        () => mockStorage.read(any()),
-      ).thenAnswer((_) => {
-            ThemeCubit.storageKey: ThemeMode.dark.index,
-          });
+    blocTest<ThemeCubit, ThemeMode>(
+      'initialize with saved theme',
+      build: () {
+        when(
+          () => mockStorage.read(any()),
+        ).thenAnswer((_) => {
+              ThemeCubit.storageKey: ThemeMode.dark.index,
+            });
 
-      HydratedBlocOverrides.runZoned(
-        () => themeCubit = ThemeCubit(),
-        storage: mockStorage,
-      );
+        HydratedBlocOverrides.runZoned(
+          () => themeCubit = ThemeCubit(),
+          storage: mockStorage,
+        );
 
-      return themeCubit;
-    }, verify: (cubit) {
-      expect(cubit.state, ThemeMode.dark);
-    });
+        return themeCubit;
+      },
+      verify: (cubit) {
+        expect(cubit.state, ThemeMode.dark);
+      },
+    );
 
     blocTest<ThemeCubit, ThemeMode>(
       'calls write when setTheme ran',
@@ -76,8 +80,7 @@ void main() {
       },
       verify: (cubit) {
         verify<dynamic>(
-          () => mockStorage
-              .write(any(), {ThemeCubit.storageKey: ThemeMode.light.index}),
+          () => mockStorage.write(any(), {ThemeCubit.storageKey: ThemeMode.light.index}),
         ).called(1);
       },
     );
@@ -89,16 +92,17 @@ void main() {
       expect: () => [ThemeMode.dark],
     );
 
-    blocTest<ThemeCubit, ThemeMode>('changes theme multiple times',
-        build: () => themeCubit,
-        act: (cubit) {
-          cubit.setTheme(ThemeMode.dark);
-          cubit.setTheme(ThemeMode.light);
-          cubit.setTheme(ThemeMode.system);
-          cubit.setTheme(ThemeMode.dark);
-        },
-        expect: () =>
-            [ThemeMode.dark, ThemeMode.light, ThemeMode.system, ThemeMode.dark],
-        skip: 0);
+    blocTest<ThemeCubit, ThemeMode>(
+      'changes theme multiple times',
+      build: () => themeCubit,
+      act: (cubit) {
+        cubit.setTheme(ThemeMode.dark);
+        cubit.setTheme(ThemeMode.light);
+        cubit.setTheme(ThemeMode.system);
+        cubit.setTheme(ThemeMode.dark);
+      },
+      expect: () => [ThemeMode.dark, ThemeMode.light, ThemeMode.system, ThemeMode.dark],
+      skip: 0,
+    );
   });
 }

@@ -1,8 +1,13 @@
 {
-    "appTitle": "BLoC Artykuły",
+    "appTitle": "Spotter New Releases",
     "settings": "Ustawienia",
     "selectThemeMode": "Wybierz motyw",
     "light": "Jasny",
     "dark": "Ciemny",
-    "system": "Systemowy"
+    "system": "Systemowy",
+    "error400": "Nie udało się uwierzytelnić tej aplikacji",
+    "error401": "Nieprawidłowy token autoryzacyjny",
+    "error404": "Nie znaleziono",
+    "errorUnknown": "Nieznany błąd",
+    "unknownArtist": "Nieznany artysta"
 }

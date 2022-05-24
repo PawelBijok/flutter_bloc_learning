@@ -1,10 +1,9 @@
-import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
+import 'package:bloc_learning/cubits/home/home_cubit.dart';
 import 'package:bloc_learning/extensions/extensions.dart';
 import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
 import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
-import 'package:bloc_learning/presentation/home/widgets/articles_list.dart';
+import 'package:bloc_learning/presentation/home/widgets/albums_grid.dart';
 import 'package:bloc_learning/presentation/home/widgets/drawer/home_drawer.dart';
-import 'package:bloc_learning/presentation/home/widgets/refresh_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,9 +17,6 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.appTitle),
-        actions: const [
-          RefreshButton(),
-        ],
       ),
       drawer: const HomeDrawer(),
       body: const _Body(),
@@ -33,22 +29,13 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ArticlesBloc, ArticlesState>(
-      listener: (context, state) {
-        state.maybeWhen(
-          loadedWithError: (_, message) {
-            context.messenger.showSnackBar(SnackBar(content: Text(message)));
-          },
-          orElse: () {},
-        );
-      },
-      builder: (context, ArticlesState state) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
         return state.when(
           initial: () => const LoadingIndicator(),
-          loading: () => const LoadingIndicator(),
-          loaded: (articles) => ArticlesList(articles: articles),
-          loadedWithError: (articles, _) => ArticlesList(articles: articles),
-          error: ErrorMessage.new,
+          loadingInProgress: () => const LoadingIndicator(),
+          loadedSuccessfully: (albums) => AlbumsGrid(albums: albums),
+          loadedWithError: ErrorMessage.new,
         );
       },
     );
