@@ -1,4 +1,5 @@
 import 'package:bloc_learning/app.dart';
+import 'package:bloc_learning/resources/flavors.dart';
 import 'package:bloc_learning/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,7 +16,9 @@ void main() async {
     () {
       setupDependencies();
 
-      return runApp(const App());
+      return runApp(const App(
+        flavor: Flavor.development,
+      ));
     },
     storage: storage,
   );
