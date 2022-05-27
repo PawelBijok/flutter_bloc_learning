@@ -1,9 +1,9 @@
-import 'package:bloc_learning/bloc/article/article_bloc.dart';
-import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
+import 'package:bloc_learning/cubits/details/details_cubit.dart';
+import 'package:bloc_learning/cubits/home/home_cubit.dart';
 import 'package:bloc_learning/cubits/theme/theme_cubit.dart';
+import 'package:bloc_learning/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class GlobalBlocs extends StatelessWidget {
   const GlobalBlocs({required this.child, Key? key}) : super(key: key);
@@ -14,13 +14,13 @@ class GlobalBlocs extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              GetIt.I<ArticlesBloc>()..add(const LoadArticles()),
+          create: (_) => getIt<HomeCubit>()..loadAlbums(),
         ),
+        BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(
-          create: (context) => GetIt.I<ArticleBloc>(),
+          create: (context) => getIt<DetailsCubit>(),
         ),
-        BlocProvider(create: (context) => GetIt.I<ThemeCubit>()),
+        BlocProvider(create: (context) => getIt<ThemeCubit>()),
       ],
       child: child,
     );

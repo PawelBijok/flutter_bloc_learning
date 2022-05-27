@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThemeSelector extends StatelessWidget {
-  const ThemeSelector({Key? key}) : super(key: key);
+  const  ThemeSelector({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

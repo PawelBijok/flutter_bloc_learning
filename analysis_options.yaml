@@ -1,5 +1,3 @@
-
-
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
@@ -7,6 +5,8 @@ analyzer:
     - 'build/**'
     - 'lib/**/*.freezed.dart'
     - 'lib/**/*.g.dart'
+  errors:
+      invalid_annotation_target: ignore
   plugins:
     - dart_code_metrics
 
@@ -18,7 +18,7 @@ dart_code_metrics:
     cyclomatic-complexity: 20
     maximum-nesting-level: 5
     number-of-parameters: 4
-    source-lines-of-code: 50
+    source-lines-of-code: 80
   metrics-exclude:
     - test/**
   rules:
@@ -29,7 +29,7 @@ dart_code_metrics:
     - no-equal-then-else
   
 
-linter:
+linter:    
   rules:
       always_declare_return_types: true
       always_put_required_named_parameters_first: true

@@ -1,57 +1,53 @@
-import 'package:bloc_learning/bloc/articles/articles_bloc.dart';
-import 'package:bloc_learning/data/articles_repository.dart';
-import 'package:bloc_learning/exceptions/network_exception.dart';
-import 'package:bloc_learning/models/article/article.dart';
+import 'package:bloc_learning/cubits/home/home_cubit.dart';
+import 'package:bloc_learning/data/albums_repository.dart';
+import 'package:bloc_learning/models/album/album.dart';
+import 'package:bloc_learning/models/album/album_failure.dart';
+
 import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
 import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
 import 'package:bloc_learning/presentation/home/home_screen.dart';
-import 'package:bloc_learning/presentation/home/widgets/refresh_button.dart';
-import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_learning/presentation/home/widgets/albums_grid.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../fakes/albums_lists.dart';
 
-class MockFakeArticleRepository extends Mock implements FakeArticleRepository {}
+class MockAlbumsRepository extends Mock implements AlbumsRepository {}
 
 void main() {
-  late MockFakeArticleRepository mockRepo;
-
-  const List<Article> articleList = <Article>[
-    Article(
-      id: 1,
-      title: 't1',
-      content: 'c1',
-      views: 1,
-    ),
-  ];
+  late MockAlbumsRepository mockRepo;
+  late HomeCubit homeCubit;
+  const AlbumFailure failure = AlbumFailure.unexpected();
 
   setUp(() {
-    mockRepo = MockFakeArticleRepository();
+    mockRepo = MockAlbumsRepository();
+    homeCubit = HomeCubit(mockRepo);
   });
 
-  void arangeArticlesInstantyly() {
-    when(() => mockRepo.getArticles()).thenAnswer(
+  void arangeAlbumsInstantyly(List<Album> albums) {
+    when(() => mockRepo.getAlbums()).thenAnswer(
       (_) async {
-        return articleList;
+        return Right(albums);
       },
     );
   }
 
-  void arangeArticlesWithDelay(Duration duration) {
-    when(() => mockRepo.getArticles()).thenAnswer(
+  void arangeAlbumsWithDelay(Duration duration, List<Album> albums) {
+    when(() => mockRepo.getAlbums()).thenAnswer(
       (_) async {
         await Future.delayed(duration);
 
-        return articleList;
+        return Right(albums);
       },
     );
   }
 
   void arangeErrorWithMessage(String message) {
-    when(() => mockRepo.getArticles()).thenThrow(NetworkException(message));
+    when(() => mockRepo.getAlbums()).thenAnswer((_) async => const Left(failure));
   }
 
   Widget createWidgetUnderTest() {
@@ -62,13 +58,10 @@ void main() {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', ''), // English, no country code
-        Locale('pl', ''), // Polish, no country code
-      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: BlocProvider(
-          create: (ctx) => ArticlesBloc(mockRepo)..add(const LoadArticles()),
+          create: (ctx) => homeCubit,
           child: const HomeScreen(),
         ),
       ),
@@ -89,26 +82,26 @@ void main() {
     testWidgets(
       'should display loading while articles are loading',
       (WidgetTester tester) async {
-        arangeArticlesWithDelay(const Duration(seconds: 2));
+        arangeAlbumsWithDelay(const Duration(seconds: 2), fakeAlbumsList);
         await tester.pumpWidget(createWidgetUnderTest());
         await tester.pump(const Duration(milliseconds: 500));
         expect(
           find.byType(LoadingIndicator),
           findsOneWidget,
         );
-        await tester.pumpAndSettle();
       },
     );
     testWidgets(
       'should display articles',
       (WidgetTester tester) async {
-        arangeArticlesInstantyly();
+        arangeAlbumsInstantyly(fakeAlbumsList);
         await tester.pumpWidget(createWidgetUnderTest());
-        await tester.pump();
+        await homeCubit.loadAlbums();
+        await tester.pumpAndSettle();
 
         expect(find.byType(LoadingIndicator), findsNothing);
-        for (final Article article in articleList) {
-          expect(find.text(article.title), findsOneWidget);
+        for (final Album album in fakeAlbumsList) {
+          expect(find.text(album.name), findsOneWidget);
         }
       },
     );
@@ -118,49 +111,30 @@ void main() {
         const errorMessage = 'error message, smth went wrong';
         arangeErrorWithMessage(errorMessage);
         await tester.pumpWidget(createWidgetUnderTest());
+        await homeCubit.loadAlbums();
         await tester.pump();
 
         expect(find.byType(LoadingIndicator), findsNothing);
         expect(find.byType(ErrorMessage), findsOneWidget);
-        expect(find.text(errorMessage), findsOneWidget);
       },
     );
-
     testWidgets(
-      'should reload articles when refresh button is pressed',
+      'should reload articles when pulled down from top',
       (WidgetTester tester) async {
-        arangeArticlesInstantyly();
+        arangeAlbumsInstantyly(fakeAlbumsList);
         await tester.pumpWidget(createWidgetUnderTest());
-        await tester.pump();
-        await tester.tap(find.byType(RefreshButton));
-        await tester.pump();
-        for (final Article articel in articleList) {
-          expect(find.text(articel.title), findsOneWidget);
+        await homeCubit.loadAlbums();
+
+        arangeAlbumsInstantyly(fakeAlbumsList2);
+        await tester.pump(const Duration(milliseconds: 50));
+
+        await tester.drag(find.byType(AlbumsGrid), const Offset(0, 100));
+
+        await tester.pumpAndSettle(const Duration(milliseconds: 50));
+        for (final Album album in fakeAlbumsList2) {
+          expect(find.text(album.name), findsOneWidget);
         }
-      },
-    );
-    testWidgets(
-      'should display snackbar on refresh with error when articles were previously loaded successfully',
-      (WidgetTester tester) async {
-        const errorMessage = 'error message, smth went wrong';
-
-        arangeArticlesInstantyly();
-
-        final Widget wut = createWidgetUnderTest();
-        await tester.pumpWidget(wut);
-
-        arangeErrorWithMessage(errorMessage);
-
-        await tester.tap(find.byType(RefreshButton));
-
-        await tester.pump(const Duration(milliseconds: 200));
-        expect(find.byType(SnackBar), findsOneWidget);
-
-        await tester.pump();
       },
     );
   });
 }
-
-class MockArticlesBloc extends MockBloc<ArticlesEvent, ArticlesState>
-    implements ArticlesBloc {}
