@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_learning/data/albums_repository.dart';
+import 'package:bloc_learning/data/repositories/albums_repository.dart';
 import 'package:bloc_learning/models/album/album.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

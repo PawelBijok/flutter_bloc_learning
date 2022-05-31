@@ -1,5 +1,6 @@
 import 'package:bloc_learning/cubits/home/home_cubit.dart';
-import 'package:bloc_learning/data/albums_repository.dart';
+import 'package:bloc_learning/cubits/theme/theme_cubit.dart';
+import 'package:bloc_learning/data/repositories/albums_repository.dart';
 import 'package:bloc_learning/models/album/album.dart';
 import 'package:bloc_learning/models/album/album_failure.dart';
 
@@ -7,23 +8,52 @@ import 'package:bloc_learning/presentation/core/widgets/error_message.dart';
 import 'package:bloc_learning/presentation/core/widgets/loading_indicator.dart';
 import 'package:bloc_learning/presentation/home/home_screen.dart';
 import 'package:bloc_learning/presentation/home/widgets/albums_grid.dart';
+import 'package:bloc_learning/presentation/home/widgets/drawer/home_drawer.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../fakes/albums_lists.dart';
 
 class MockAlbumsRepository extends Mock implements AlbumsRepository {}
 
+class MockStorage extends Mock implements Storage {}
+
 void main() {
   late MockAlbumsRepository mockRepo;
   late HomeCubit homeCubit;
+  late ThemeCubit themeCubit;
+  late MockStorage mockStorage;
   const AlbumFailure failure = AlbumFailure.unexpected();
 
-  setUp(() {
+  setUp(() async {
+    mockStorage = MockStorage();
+
+    when(
+      () => mockStorage.write(
+        any(),
+        any<dynamic>(),
+      ),
+    ).thenAnswer(
+      (_) async {},
+    );
+    when<dynamic>(
+      () => mockStorage.read(
+        any(),
+      ),
+    ).thenReturn(<String, dynamic>{});
+
+    HydratedBlocOverrides.runZoned(
+      () {
+        return themeCubit = ThemeCubit();
+      },
+      storage: mockStorage,
+    );
+
     mockRepo = MockAlbumsRepository();
     homeCubit = HomeCubit(mockRepo);
   });
@@ -60,8 +90,11 @@ void main() {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
-        body: BlocProvider(
-          create: (ctx) => homeCubit,
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (ctx) => homeCubit),
+            BlocProvider(create: (ctx) => themeCubit),
+          ],
           child: const HomeScreen(),
         ),
       ),
@@ -134,6 +167,22 @@ void main() {
         for (final Album album in fakeAlbumsList2) {
           expect(find.text(album.name), findsOneWidget);
         }
+      },
+    );
+
+    testWidgets(
+      'should open drawer after swiping from left',
+      (WidgetTester tester) async {
+        arangeAlbumsInstantyly(fakeAlbumsList);
+        await tester.pumpWidget(createWidgetUnderTest());
+        await tester.dragFrom(
+          tester.getTopLeft(
+            find.byType(HomeScreen),
+          ),
+          const Offset(200, 0),
+        );
+        await tester.pump();
+        expect(find.byType(HomeDrawer), findsOneWidget);
       },
     );
   });

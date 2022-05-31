@@ -1,5 +1,5 @@
 import 'package:bloc_learning/cubits/details/details_cubit.dart';
-import 'package:bloc_learning/data/albums_repository.dart';
+import 'package:bloc_learning/data/repositories/albums_repository.dart';
 import 'package:bloc_learning/models/album/album_failure.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
