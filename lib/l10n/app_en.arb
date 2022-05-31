@@ -9,6 +9,8 @@
     "error401": "Invalid access token",
     "error404": "Not found",
     "errorUnknown": "Unknown error",
-    "unknownArtist": "Unknown artist"
+    "unknownArtist": "Unknown artist",
+    "tracksNotFound": "Tracks not found",
+    "albumPopularity": "Album popularity"
 
 }
