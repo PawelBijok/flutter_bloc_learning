@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:bloc_learning/data/albums_repository.dart';
 import 'package:bloc_learning/data/api/spotify_api.dart';
+import 'package:bloc_learning/data/repositories/albums_repository.dart';
 import 'package:bloc_learning/exceptions/network_exception.dart';
 import 'package:bloc_learning/models/album/album.dart';
 import 'package:flutter_test/flutter_test.dart';

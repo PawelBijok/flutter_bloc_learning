@@ -48,3 +48,23 @@ const List<Album> fakeAlbumsList2 = [
     ],
   ),
 ];
+const List<Album> fakeAlbumsListNoArtists = [
+  Album(
+    id: 'album1',
+    name: '1 name',
+    totalTracks: 2,
+    releaseDate: '2020-02-04',
+    images: [
+      Image(
+        url: 'https://fakeimg.pl/300',
+        height: 600,
+        width: 600,
+      ),
+      Image(
+        url: 'https://fakeimg.pl/300',
+        height: 300,
+        width: 300,
+      ),
+    ],
+  ),
+];

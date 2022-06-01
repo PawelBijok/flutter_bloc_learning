@@ -14,11 +14,13 @@ class ThemeSelectButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.theme.colorScheme;
+
     return Expanded(
       child: GestureDetector(
         onTap: () => context.read<ThemeCubit>().setTheme(themeMode),
         child: Container(
-          color: isActive ? context.theme.colorScheme.primary : context.theme.colorScheme.primaryContainer,
+          color: isActive ? colorScheme.primary : colorScheme.primaryContainer,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(
@@ -27,7 +29,7 @@ class ThemeSelectButton extends StatelessWidget {
               Text(
                 themeMode.l10n(context).toLowerCase(),
                 style: context.theme.textTheme.titleSmall!.copyWith(
-                  color: isActive ? context.theme.colorScheme.onPrimary : context.theme.colorScheme.onPrimaryContainer,
+                  color: isActive ? colorScheme.onPrimary : colorScheme.onPrimaryContainer,
                 ),
               ),
             ],

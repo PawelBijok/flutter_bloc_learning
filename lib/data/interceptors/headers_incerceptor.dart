@@ -1,4 +1,4 @@
-import 'package:bloc_learning/data/token_repository.dart';
+import 'package:bloc_learning/data/repositories/token_repository.dart';
 import 'package:dio/dio.dart';
 
 class HeadersIncerceptor extends Interceptor {

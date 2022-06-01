@@ -1,6 +1,6 @@
 import 'package:bloc_learning/data/interceptors/dio_request_retrier.dart';
+import 'package:bloc_learning/data/repositories/token_repository.dart';
 import 'package:bloc_learning/data/services/token_service.dart';
-import 'package:bloc_learning/data/token_repository.dart';
 import 'package:dio/dio.dart';
 
 class AuthErrorRetryInterceptor extends Interceptor {
