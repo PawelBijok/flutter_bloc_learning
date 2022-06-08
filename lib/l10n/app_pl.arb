@@ -9,5 +9,8 @@
     "error401": "Nieprawidłowy token autoryzacyjny",
     "error404": "Nie znaleziono",
     "errorUnknown": "Nieznany błąd",
-    "unknownArtist": "Nieznany artysta"
+    "unknownArtist": "Nieznany artysta",
+    "tracksNotFound": "Nie znaleziono utworów",
+    "albumPopularity": "Popularność albumu"
+
 }

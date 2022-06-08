@@ -20,14 +20,26 @@ class ArtistAndName extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (album.artists != null && album.artists!.isNotEmpty)
-              Text(
-                album.artists![0].name,
-                style: theme.textTheme.titleLarge!.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (album.artists != null && album.artists!.isNotEmpty)
+                  Expanded(
+                    child: Text(
+                      album.artists![0].name,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                Text(
+                  album.releaseDate,
+                  style: theme.textTheme.labelMedium!.copyWith(color: theme.colorScheme.secondary),
                 ),
-              ),
+              ],
+            ),
             const SizedBox(
               height: 10,
             ),

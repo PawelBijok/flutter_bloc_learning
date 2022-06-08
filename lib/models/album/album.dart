@@ -1,5 +1,6 @@
 // This file is "main.dart"
 import 'package:bloc_learning/models/artist/artist.dart';
+import 'package:bloc_learning/models/dtos/external_urls_dto.dart';
 import 'package:bloc_learning/models/image/image.dart';
 import 'package:bloc_learning/models/tracks/tracks.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,7 @@ class Album with _$Album {
     @JsonKey(name: 'total_tracks') required final int totalTracks,
     @JsonKey(name: 'release_date') required final String releaseDate,
     required final List<Image> images,
+    @JsonKey(name: 'external_urls') final ExternalUrlsDto? externalUrls,
     final List<Artist>? artists,
     final String? label,
     final int? popularity,

@@ -5,15 +5,23 @@ import 'package:flutter/material.dart';
 class SliverImage extends StatelessWidget {
   const SliverImage({
     required this.album,
+    required this.shouldShowAppBarTitle,
     Key? key,
   }) : super(key: key);
 
   final Album album;
+  final bool shouldShowAppBarTitle;
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
+      stretch: true,
+      title: AnimatedOpacity(
+        opacity: shouldShowAppBarTitle ? 1 : 0,
+        duration: const Duration(milliseconds: 200),
+        child: Text(album.name),
+      ),
       expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
